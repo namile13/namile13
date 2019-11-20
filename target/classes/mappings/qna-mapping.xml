@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="QnADAO">
+
+	<select id="getTotleCount" resultType="int">
+		<![CDATA[
+			SELECT count(*) 
+			FROM qna
+		]]>
+	</select>
+
+	<select id="getQnAList" resultType="qna">
+		<![CDATA[
+			SELECT qseq, id, nickname, title, content, regdate, count
+			FROM (SELECT rownum rn, qseq, id, nickname, title, content, regdate, count
+				 FROM (SELECT * 
+					  FROM qna 
+					  ORDER BY qseq DESC)
+				 WHERE rownum <= #{page} * #{perPageNum})
+			WHERE rn > (#{page}-1) * #{perPageNum}
+		]]>
+	</select>
+
+	<select id="getQnA" parameterType="int" resultType="qna">
+		<![CDATA[
+			SELECT * 
+			FROM qna
+			WHERE qseq = #{qseq}
+		]]>
+	</select>
+
+	<insert id="insertQnA" parameterType="qna">
+		<![CDATA[
+			INSERT INTO qna (qseq, id, nickname, title, content)
+			VALUES(qseq_no.nextval,#{id},#{nickname},#{title},#{content})
+		]]>
+	</insert>
+
+	<update id="updateQnA" parameterType="qna">
+		<![CDATA[
+			UPDATE qna
+			SET	title=#{title}, content=#{content}
+			WHERE qseq = #{qseq}
+			AND id = #{id}
+		]]>
+	</update>
+
+	<delete id="deleteQnA" parameterType="qna">
+		<![CDATA[
+			DELETE FROM qna 
+			WHERE qseq = #{qseq}
+		]]>
+	</delete>
+
+</mapper>

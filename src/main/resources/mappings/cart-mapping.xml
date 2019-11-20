@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CartDAO">
+
+	<select id="getTotleCount" resultType="int">
+		<![CDATA[
+			SELECT count(*) 
+			FROM cart_view
+			WHERE id = #{id}
+		]]>
+	</select>
+
+	<select id="getCartList" parameterType="cart" resultType="cart">
+		<![CDATA[
+			SELECT cseq, id, pseq, name, image, price, content, startDate, endDate, result
+			FROM (SELECT rownum rn, cseq, id, pseq, name, image, price, content, startDate, endDate, result
+				 FROM (SELECT *
+					  FROM cart_view
+					  WHERE id = #{id}
+					  ORDER BY cseq DESC)
+				 WHERE rownum <= #{page} * #{perPageNum})
+			WHERE rn > (#{page}-1) * #{perPageNum}
+		]]>
+	</select>
+
+	<select id="getCart" parameterType="cart" resultType="cart">
+		<![CDATA[
+			SELECT *
+			FROM cart_view
+			WHERE cseq=#{cseq}
+			AND pseq=#{pseq}
+		]]>
+	</select>
+
+	<insert id="insertCart" parameterType="cart">
+		<![CDATA[
+			INSERT INTO cart (cseq, id, pseq)
+			VALUES(cseq_no.nextval,#{id},#{pseq})
+		]]>
+	</insert>
+
+	<update id="updateCartByResult" parameterType="cart">
+		<![CDATA[
+			UPDATE cart
+			SET result='2'
+			WHERE cseq = #{cseq}
+		]]>
+	</update>
+
+	<delete id="deleteCart" parameterType="int">
+		<![CDATA[
+			DELETE FROM cart 
+			WHERE cseq = #{cseq}
+		]]>
+	</delete>
+
+	<delete id="deleteCartByResult" parameterType="int">
+		<![CDATA[
+			DELETE FROM cart 
+			WHERE result = '2'
+		]]>
+	</delete>
+
+</mapper>

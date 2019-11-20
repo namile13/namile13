@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<typeAliases>
+		<typeAlias type="com.human.biz.member.MemberVO" alias="member"/>
+		<typeAlias type="com.human.biz.product.ProductVO" alias="product"/>
+		<typeAlias type="com.human.biz.product.ProductDetailVO" alias="productDetail"/>
+		<typeAlias type="com.human.biz.cart.CartVO" alias="cart"/>
+		<typeAlias type="com.human.biz.payment.PaymentVO" alias="payment"/>
+		<typeAlias type="com.human.biz.review.ReviewVO" alias="review"/>
+		<typeAlias type="com.human.biz.review.ReviewCommentVO" alias="reviewComment"/>
+		<typeAlias type="com.human.biz.notice.NoticeVO" alias="notice"/>
+		<typeAlias type="com.human.biz.qna.QnAVO" alias="qna"/>
+		<typeAlias type="com.human.biz.qna.QnACommentVO" alias="qnaComment"/>
+		<typeAlias type="com.human.biz.pagination.CriteriaVO" alias="criteria"/>
+		<typeAlias type="com.human.biz.pagination.PageMakerVO" alias="pageMaker"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappings/member-mapping.xml"/>
+		<mapper resource="mappings/product-mapping.xml"/>
+		<mapper resource="mappings/productDetail-mapping.xml"/>
+		<mapper resource="mappings/cart-mapping.xml"/>
+		<mapper resource="mappings/payment-mapping.xml"/>
+		<mapper resource="mappings/review-mapping.xml"/>
+		<mapper resource="mappings/reviewComment-mapping.xml"/>
+		<mapper resource="mappings/notice-mapping.xml"/>
+		<mapper resource="mappings/qna-mapping.xml"/>
+		<mapper resource="mappings/qnaComment-mapping.xml"/>
+	</mappers>
+</configuration>

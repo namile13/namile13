@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ProductDAO">
+
+	<select id="getTotleCount" resultType="int">
+		<![CDATA[
+			SELECT count(*) 
+			FROM product
+		]]>
+	</select>
+
+	<select id="getProductList" resultType="product">
+		<![CDATA[
+			SELECT pseq, name, image, price, content, startDate, endDate, kind, regdate 
+			FROM (SELECT rownum rn, pseq, name, image, price, content, startDate, endDate, kind, regdate
+				  FROM (SELECT *
+                		FROM product
+                		ORDER BY pseq DESC, regdate DESC)
+        		  WHERE rownum <= #{page} * #{perPageNum})
+			WHERE rn > (#{page}-1) * #{perPageNum}
+		]]>
+	</select>
+
+	<select id="getProduct" parameterType="int" resultType="product">
+		<![CDATA[
+			SELECT * 
+			FROM product
+			WHERE pseq=#{pseq}
+		]]>
+	</select>
+
+	<select id="getProductBestList" resultType="product">
+		<![CDATA[
+			SELECT * 
+			FROM (SELECT * 
+				FROM product
+				ORDER BY count DESC)
+			WHERE rownum <= 3
+		]]>
+	</select>
+
+	<select id="getProductNewList" resultType="product">
+		<![CDATA[
+			SELECT * 
+			FROM (SELECT * 
+				FROM product
+				ORDER BY regdate DESC)
+			WHERE rownum <= 3
+		]]>
+	</select>
+
+	<insert id="insertProduct" parameterType="product">
+		<![CDATA[
+			INSERT INTO product (pseq, name, image, price, content, startDate, endDate, kind)
+			VALUES(pseq_no.nextval,#{name},#{image},#{price},#{content},#{startDate},#{endDate},#{kind})
+		]]>
+	</insert>
+
+	<delete id="deleteProduct" parameterType="int">
+		<![CDATA[
+			DELETE FROM product 
+			WHERE pseq = #{pseq}
+		]]>
+	</delete>
+
+	<update id="updateProduct" parameterType="product">
+		<![CDATA[
+			UPDATE product
+			SET price=#{price}, startDate=#{startDate}, endDate=#{endDate}
+			WHERE pseq = #{pseq}
+		]]>
+	</update>
+
+	<update id="updateProductCount" parameterType="int">
+		<![CDATA[
+			UPDATE product
+			SET	count=#{count}
+			WHERE pseq = #{pseq}
+		]]>
+	</update>
+
+	<select id="getSearchCount" parameterType="product" resultType="int">
+		<![CDATA[
+			SELECT count(*) 
+			FROM product
+			WHERE kind like '%'||#{searchKeyword}||'%'
+		]]>
+	</select>
+	
+	<!-- search List -->
+	<select id="getProductSearchList" parameterType="product" resultType="product">
+		<![CDATA[
+			SELECT pseq, name, image, price, content, startDate, endDate, kind, regdate 
+			FROM (SELECT rownum rn, pseq, name, image, price, content, startDate, endDate, kind, regdate
+				  FROM (SELECT * 
+						FROM product
+						WHERE kind like '%'||#{searchKeyword}||'%'
+						ORDER BY pseq DESC)
+        		  WHERE rownum <= #{page} * #{perPageNum})
+			WHERE rn > (#{page}-1) * #{perPageNum}
+		]]>
+	</select>
+
+</mapper>

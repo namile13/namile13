@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ReviewCommentDAO">
+
+	<select id="getReviewCommentList" resultType="reviewComment">
+		SELECT * 
+		FROM review_comment
+		WHERE rseq = #{rseq}
+		ORDER BY rcseq DESC
+	</select>
+
+	<insert id="insertReviewComment" parameterType="reviewComment">
+		INSERT INTO review_comment (rcseq, rseq, id, nickname, content)
+		VALUES(rcseq_no.nextval,#{rseq},#{id},#{nickname},#{content})
+	</insert>
+
+	<update id="updateReviewComment" parameterType="reviewComment">
+		UPDATE review_comment
+		SET content=#{content}
+		WHERE rcseq = #{rcseq}
+		AND id = #{id}
+	</update>
+
+	<delete id="deleteReviewComment" parameterType="reviewComment">
+		DELETE FROM review_comment 
+		WHERE rcseq = #{rcseq}
+	</delete>
+
+	<delete id="deleteReviewCommentAll" parameterType="reviewComment">
+		DELETE FROM review_comment 
+		WHERE rseq = #{rseq}
+	</delete>
+
+</mapper>

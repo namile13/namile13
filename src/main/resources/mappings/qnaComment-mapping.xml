@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="QnACommentDAO">
+
+	<select id="getQnACommentList" resultType="qnaComment">
+		SELECT * 
+		FROM qna_comment
+		WHERE qseq = #{qseq}
+		ORDER BY qcseq DESC
+	</select>
+
+	<insert id="insertQnAComment" parameterType="qnaComment">
+		INSERT INTO qna_comment (qcseq, qseq, id, nickname, content)
+		VALUES(qcseq_no.nextval,#{qseq},#{id},#{nickname},#{content})
+	</insert>
+
+	<delete id="deleteQnAComment" parameterType="qnaComment">
+		DELETE FROM qna_comment 
+		WHERE qcseq = #{qcseq}
+	</delete>
+
+	<delete id="deleteQnACommentAll" parameterType="qnaComment">
+		DELETE FROM qna_comment 
+		WHERE qseq = #{qseq}
+	</delete>
+
+</mapper>

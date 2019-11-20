@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="NoticeDAO">
+
+	<select id="getTotleCount" resultType="int">
+		<![CDATA[
+			SELECT count(*) 
+			FROM notice
+		]]>
+	</select>
+
+	<select id="getNoticeList" resultType="notice">
+		<![CDATA[
+			SELECT nseq, title, content, regdate
+			FROM (SELECT rownum rn, nseq, title, content, regdate
+				 FROM (SELECT * 
+					  FROM notice
+					  ORDER BY nseq DESC)
+				 WHERE rownum <= #{page} * #{perPageNum})
+			WHERE rn > (#{page}-1) * #{perPageNum}
+		]]>
+	</select>
+
+	<select id="getNotice" parameterType="int" resultType="notice">
+		<![CDATA[
+			SELECT * 
+			FROM notice
+			WHERE nseq = #{nseq}
+		]]>
+	</select>
+
+	<insert id="insertNotice" parameterType="notice">
+		<![CDATA[
+			INSERT INTO notice (nseq, title, content)
+			VALUES(nseq_no.nextval,#{title},#{content})
+		]]>
+	</insert>
+
+	<update id="updateNotice" parameterType="notice">
+		<![CDATA[
+			UPDATE notice
+			SET	title=#{title}, content=#{content}
+			WHERE nseq = #{nseq}
+		]]>
+	</update>
+
+	<delete id="deleteNotice" parameterType="notice">
+		<![CDATA[
+			DELETE FROM notice 
+			WHERE nseq = #{nseq}
+		]]>
+	</delete>
+
+</mapper>

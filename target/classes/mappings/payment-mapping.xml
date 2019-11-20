@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PaymentDAO">
+
+	<select id="getTotleCount" resultType="int">
+		<![CDATA[
+			SELECT count(*) 
+			FROM payment
+			WHERE id = #{id}
+		]]>
+	</select>
+
+	<select id="getPaymentList" parameterType="payment" resultType="payment">
+		<![CDATA[
+			SELECT payseq, id, pseq, name, image, people, price, content, startDate, endDate, result 
+			FROM (SELECT rownum rn, payseq, id, pseq, name, image, people, price, content, startDate, endDate, result 
+				 FROM (SELECT *
+					  FROM payment
+					  WHERE id = #{id}
+					  ORDER BY payseq DESC)
+				 WHERE rownum <= #{page} * #{perPageNum})
+			WHERE rn > (#{page}-1) * #{perPageNum}
+		]]>
+	</select>
+
+	<insert id="insertPayment" parameterType="payment">
+		INSERT INTO payment (payseq, id, pseq, name, image, people, price, content, startDate, endDate)
+		VALUES(payseq_no.nextval,#{id},#{pseq},#{name},#{image},#{people},#{price},#{content},#{startDate},#{endDate})
+	</insert>
+
+	<update id="updatePaymentCancle" parameterType="payment">
+		UPDATE payment
+		SET result='2'
+		WHERE payseq = #{payseq}
+	</update>
+
+	<update id="updatePaymentFinish" parameterType="payment">
+		UPDATE payment
+		SET result='3'
+		WHERE payseq = #{payseq}
+	</update>
+
+	<delete id="deletePayment" parameterType="int">
+		DELETE FROM payment
+		WHERE payseq = #{payseq}
+	</delete>
+
+</mapper>
